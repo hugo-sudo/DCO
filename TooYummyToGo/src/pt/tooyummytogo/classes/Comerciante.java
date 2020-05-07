@@ -1,5 +1,6 @@
 package pt.tooyummytogo.classes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +14,16 @@ public class Comerciante {
 	private String password;
 	private PosicaoCoordenadas localizacao;
 	private CatProdutos produtosCom = new CatProdutos();
-	private int id;
+	private CatProdutos produtosHoje = new CatProdutos();
 	
-	
-	public Comerciante (String nome, String password, String email, int contacto, PosicaoCoordenadas localizacao,CatProdutos produtosCom, int id) {
+	public Comerciante (String nome, String password, String email, int contacto, PosicaoCoordenadas localizacao) {
 		this.nome = nome;
 		this.email = email;
 		this.contacto = contacto;
 		this.password = password;
 		this.localizacao = localizacao;
-		this.produtosCom = produtosCom;
-		this.id = id; //ver como gerar um id aleatório
 	}
+	
 	
 	public List<String> getTiposProd() {
 		ArrayList<String> tiposProd = new ArrayList<String>();
@@ -34,21 +33,45 @@ public class Comerciante {
 		return tiposProd;
 	}
 	
-	public boolean existeProd (int id) {
-		return produtosCom.existe(id);
+	public boolean existeProd (String tp) {
+		return produtosCom.existe(tp);
 	}
 	
-	public void addProd (Produto produto) {
-		produtosCom.addProduto(produto);
+	public void addProd (int quantidade, String[] ingredientes, String tipo, int valor) {
+		
+		getCatProdutos().addProduto(new Produto(quantidade, ingredientes, tipo, valor));
 	}
 
-
-	public int getId() {
-		return id;
+	public void addHoje(int quantidade, String[] ingredientes, String tipo,int valor) {
+		getProdutosHoje().addProduto(new Produto(quantidade, ingredientes, tipo, valor));
+	}
+	
+	public void horarioHj(LocalDateTime now, LocalDateTime plusHours) {
+		getProdutosHoje().setHorario(now, plusHours);
+	}
+	
+	public void resetHoje() {
+		produtosHoje = new CatProdutos();
 	}
 
 	public CatProdutos getCatProdutos() {
 		return produtosCom;
+	}
+	
+	public CatProdutos getProdutosHoje() {
+		return produtosHoje;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public String getNome() {
+        return nome;
+    }
+	
+	public String getPassword() {
+		return password;
 	}
 
 	public PosicaoCoordenadas getLocalizacao() {
@@ -60,8 +83,5 @@ public class Comerciante {
 		return contacto;
 	}
 	
-	public String getNome() {
-		return nome;
-	}
 
 }

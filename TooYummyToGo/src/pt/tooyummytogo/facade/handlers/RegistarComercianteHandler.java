@@ -1,35 +1,36 @@
 package pt.tooyummytogo.facade.handlers;
 
-import pt.tooyummytogo.facade.dto.PosicaoCoordenadas;
-
-import java.util.List;
-
-import pt.tooyummytogo.classes.CatProdutos;
-import pt.tooyummytogo.classes.CatalogoComerciantes;
+import pt.tooyummytogo.classes.CatComerciantes;
 import pt.tooyummytogo.classes.Comerciante;
+import pt.tooyummytogo.facade.dto.PosicaoCoordenadas;
 
 
 public class RegistarComercianteHandler {
+	
+	private CatComerciantes catCom;
+	
+	
+	public RegistarComercianteHandler(CatComerciantes catCom) {
+		this.catCom = catCom;
+	}
+	
+	
 	/**
 	 * Regista um Comerciante.
 	 * @param Username
 	 * @param Password
 	 * @ensures existe um comerciante com esse username
 	 */
-	public boolean registarComerciante(String nome, String password, PosicaoCoordenadas p, String email, int contacto, CatProdutos cat) {
-		CatalogoComerciantes catCom = CatalogoComerciantes.getInstanceCatCom();
-		int idCounter = catCom.getIdCounter() + 1;
+	public boolean registarComerciante(String nome, String email, int contacto, String password, PosicaoCoordenadas p) {
+
 		
-		for (Comerciante a: catCom.getComerciantes()) {
-			if (PosicaoCoordenadas.saoIguais(a.getLocalizacao(), p) || (a.getContacto() == contacto)) {
+		for (Comerciante c: catCom.getComerciantes()) {
+			if (PosicaoCoordenadas.saoIguais(c.getLocalizacao(), p) || c.getContacto() == contacto || c.getEmail().equals(email)  ) {
 				return false;
 			}
 		}
 		
-		Comerciante novoCom = new Comerciante (nome, password, email, contacto, p, cat, idCounter);
-		catCom.getComerciantes().add(novoCom);
-		catCom.setIdCounter(idCounter);
-		
+		catCom.addComerciante(nome, password, email, contacto, p);
 		return true;
 	
 	}

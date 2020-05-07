@@ -1,44 +1,41 @@
 package pt.tooyummytogo.classes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CatProdutos {
-	private int currentId = 0;
-	private ArrayList<Produto> produtos = new ArrayList<Produto>();
+	private List<Produto> produtos = new ArrayList<Produto>();
 	private static CatProdutos catProd = new CatProdutos();
 	
 	public static CatProdutos getInstanceCatProd() {
 		return catProd;
 	}
-	public int getCurrentId() {
-		return currentId;
-	}
-	public ArrayList<Produto> getProdutos() {
+	public List<Produto> getProdutos() {
 		return produtos;
 	}
 	public void addProduto(Produto prod) {
-		Optional<Produto> opt = getProduto(prod.getID());
+		Optional<Produto> opt = getProduto(prod.getTipo());
 		if (opt.isPresent()) {
-			Produto product = opt.get();
-			product.setQuantidade(product.getQt() + prod.getQt());
+			Produto produto = opt.get();
+			produto.setQuantidade(produto.getQt() + prod.getQt());
 		} else {
-			currentId++;
 			produtos.add(prod);
 		}
 		
 	}
-	public Optional<Produto> getProduto(int id) {
+	public Optional<Produto> getProduto(String tipo) {
 		for (Produto prod: getProdutos()) {
-			if (prod.getID() == id) {
+			if (prod.getTipo().equals(tipo)) {
 				return Optional.of(prod);
 			}
 		}
 		return Optional.empty();
 	}
 	
-	public boolean estaDisp(int id, int qt) {
-		Optional<Produto> opt = getProduto(id);
+	public boolean estaDisp(String tipo, int qt) {
+		Optional<Produto> opt = getProduto(tipo);
 		if (opt.isPresent()) {
 			Produto prod = opt.get();
 			if (prod.estaDisp(qt)) {
@@ -48,8 +45,17 @@ public class CatProdutos {
 		return false;
 	}
 	
-	public boolean existe (int id) {
-		return estaDisp (id,0);
+	public boolean existe (String tipo) {
+		return estaDisp (tipo,0);
+	}
+	
+	public void setHorario(LocalDateTime now, LocalDateTime plusHours) {
+		for (Produto p: getProdutos()) {
+			p.setData_inicio(now);
+			p.setData_fim(plusHours);
+		}
+		
+		
 	}
 	
 
